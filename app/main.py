@@ -26,8 +26,7 @@ def main():
                 print("LEFT_PAREN ( null")
             elif token == ')':
                 print("RIGHT_PAREN ) null")
-            else:
-                print("EOF null")
+        print("EOF null")
     else:
         print("EOF  null") # Placeholder, remove this line when implementing the scanner
 
