@@ -20,6 +20,7 @@ def scan_tokens(file_contents: TextIO) -> None:
     error_found = False
     for line_number, line in enumerate(file_contents, 1):
         for token in line:
+            print(f"{token}", file=sys.stderr)
             if token in lexems:
                 print(lexems[token])
             else:
