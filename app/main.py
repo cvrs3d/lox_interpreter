@@ -1,6 +1,6 @@
 import sys
 from typing import TextIO
-from app.lexems import lexems
+from app.lexems import lexems, special
 from app.exceptions import print_exception
 
 
@@ -12,6 +12,8 @@ def scan_tokens(file_contents: TextIO) -> None:
         while i < len(line):
             if i + 1 < len(line):
                 two_char_token = line[i: i + 2]
+                if two_char_token in special:
+                    break
                 if two_char_token in lexems:
                     print(lexems[two_char_token])
                     i += 2

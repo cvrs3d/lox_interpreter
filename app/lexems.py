@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Set
 
 lexems: Dict[str, str] = {
     "(": "LEFT_PAREN ( null",
@@ -19,5 +19,8 @@ lexems: Dict[str, str] = {
     ">=": "GREATER_EQUAL >= null",
     "<=": "LESS_EQUAL <= null",
     "!": "BANG ! null",
+    "/": "SLASH / null",
     "EOF": "EOF  null",
 }
+
+special: Set[str] = {"//", }
