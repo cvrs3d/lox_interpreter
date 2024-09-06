@@ -117,7 +117,7 @@ class TokenScanner:
         lexem = ""
 
         while i < len(line):
-            if line[i].isalpha() or line[i] == '_':
+            if line[i].isalnum() or line[i] == '_':
                 lexem += line[i]
             if line[i] in {'\n', '\t', ' '}:
                 break
