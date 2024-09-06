@@ -40,7 +40,7 @@ class TokenScanner:
         i: int = 0
         while i < len(line):
             token = line[i]
-            if token.isalpha() or '_':
+            if token.isalpha() or token == '_':
                 self.handle_identifier(line, i, line_number)
                 i = self.current_index
                 continue
