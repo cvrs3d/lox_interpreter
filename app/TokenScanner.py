@@ -25,7 +25,7 @@ class TokenScanner:
     @staticmethod
     def print_identifier(lexem: str) -> None:
         if lexem in lexems:
-            print(lexems[lexem])
+            print(lexems[lexem][0])
         else:
             print(f"IDENTIFIER {lexem} null")
 
@@ -39,7 +39,7 @@ class TokenScanner:
     def scan_tokens(self) -> None:
         for line_number, line in enumerate(self.file_contents, 1):
             self.process_line(line, line_number)
-        print(lexems["EOF"])
+        print(lexems["EOF"][0])
         if self.error_found or not self.string_ended:
             sys.exit(65)
 
@@ -67,11 +67,11 @@ class TokenScanner:
                 if two_char_token in special:
                     break
                 if two_char_token in lexems:
-                    print(lexems[two_char_token])
+                    print(lexems[two_char_token][0])
                     i += 2
                     continue
             if token in lexems:
-                print(lexems[token])
+                print(lexems[token][0])
             else:
                 self.print_exception(1, token, line_number)
                 self.error_found = True
