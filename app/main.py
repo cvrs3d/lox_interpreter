@@ -11,6 +11,7 @@ lexems: Dict[str, str] = {
     "*": "STAR * null",
     ";": "SEMICOLON ; null",
     "-": "MINUS - null",
+    "+": "PLUS + null",
     "EOF": "EOF  null",
 }
 
