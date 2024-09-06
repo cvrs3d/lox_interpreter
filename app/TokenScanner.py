@@ -120,11 +120,8 @@ class TokenScanner:
         i = start_index
         lexem = ""
 
-        while i < len(line):
-            if line[i].isalnum() or line[i] == '_':
-                lexem += line[i]
-            if line[i] in {'\n', '\t', ' '}:
-                break
+        while i < len(line) and (line[i].isalnum() or line[i] == '_'):
+            lexem += line[i]
             i += 1
         self.print_identifier(lexem)
         self.current_index = i
