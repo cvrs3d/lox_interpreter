@@ -21,6 +21,8 @@ def scan_tokens(file_contents: TextIO) -> None:
                 print(lexems[token])
             else:
                 print_exception(65, token, line_number)
+                error_found = True
+            i += 1
     print(lexems["EOF"])
     if error_found:
         exit(65)
