@@ -89,7 +89,7 @@ class TokenScanner:
                 self.print_exception(1, line[i], line_number)
                 self.error_found = True
             i += 1
-        self.current_index = i
+        self.current_index = i + 1
         if '.' not in self.number:
             print(f"NUMBER {self.number} {self.number}.0")
         else:
