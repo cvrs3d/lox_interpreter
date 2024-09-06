@@ -18,5 +18,6 @@ lexems: Dict[str, str] = {
     "<": "LESS_THEN < null",
     ">=": "GREATER_EQUAL >= null",
     "<=": "LESS_EQUAL <= null",
+    "!": "BANG ! null",
     "EOF": "EOF  null",
 }
