@@ -41,7 +41,7 @@ class TokenScanner:
         while i < len(line):
             token = line[i]
             if token.isalpha() or '_':
-                self.handle_identifier(line, i)
+                self.handle_identifier(line, i, line_number)
                 i = self.current_index
                 continue
             if token.isnumeric():
@@ -112,13 +112,16 @@ class TokenScanner:
         else:
             print(f"NUMBER {self.number} {self.number}")
 
-    def handle_identifier(self, line: str, start_index: int) -> None:
+    def handle_identifier(self, line: str, start_index: int, line_number: int) -> None:
         i = start_index
         lexem = ""
 
-        while i < len(line) and (line[i].isalpha() or line[i] == '_'):
-            lexem += line[i]
+        while i < len(line):
+            if line[i].isalpha() or line[i] == '_':
+                lexem += line[i]
+            if line[i] in {'\n', '\t', ' '}:
+                break
             i += 1
-
         self.print_identifier(lexem)
         self.current_index = i
+
