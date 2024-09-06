@@ -21,7 +21,7 @@ class TokenScanner:
             print(f"[line {line_number}] Error: Unterminated string.", file=sys.stderr)
 
     def scan_tokens(self) -> None:
-        for line_number, line in enumerate(self.file_contents):
+        for line_number, line in enumerate(self.file_contents, 1):
             self.process_line(line, line_number)
         print(lexems["EOF"])
         if self.error_found or not self.string_ended:
