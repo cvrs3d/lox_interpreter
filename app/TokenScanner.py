@@ -12,6 +12,8 @@ class TokenScanner:
         self.string_ended: bool = True
         self.string_literal: str = str()
         self.current_index: int = 0
+        self.number: str = ""
+        self.precision: bool = False
 
     @staticmethod
     def print_exception(code: int, token: str, line_number: int) -> None:
@@ -31,6 +33,10 @@ class TokenScanner:
         i: int = 0
         while i < len(line):
             token = line[i]
+            if token.isnumeric():
+                self.handle_number(line, i, line_number)
+                i = self.current_index
+                continue
             if token in {' ', '\t', '\n'}:
                 i += 1
                 continue
@@ -68,3 +74,25 @@ class TokenScanner:
         if not self.string_ended:
             self.print_exception(2, '', line_number)
         self.current_index = i + 1
+
+    def handle_number(self, line: str, start_index: int, line_number: int):
+        self.number = ""
+        self.precision = False
+        i = start_index
+        while i < len(line) and line[i].isnumeric():
+            self.number += line[i]
+            if line[i] == "." and not self.precision:
+                self.number += line[i]
+                self.precision = True
+                i += 1
+            else:
+                self.print_exception(1, line[i], line_number)
+                self.error_found = True
+            i += 1
+        self.current_index = i
+        if '.' not in self.number:
+            print(f"NUMBER {self.number} {self.number}.0")
+        else:
+            print(f"NUMBER {self.number} {self.number}")
+
+
