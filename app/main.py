@@ -1,7 +1,7 @@
 import sys
 from typing import Dict, TextIO
-from lexems import lexems
-from exceptions import print_exception
+from app.lexems import lexems
+from app.exceptions import print_exception
 
 
 def scan_tokens(file_contents: TextIO) -> None:
