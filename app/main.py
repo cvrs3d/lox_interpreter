@@ -1,5 +1,5 @@
 import sys
-from typing import Dict
+from typing import Dict, TextIO
 
 lexems: Dict[str, str] = {
     "(": "LEFT_PAREN ( null",
@@ -16,14 +16,18 @@ lexems: Dict[str, str] = {
 }
 
 
-def scan_tokens(file_contents: str) -> None:
-    for token in file_contents:
-        try:
-            print(lexems[token])
-        except KeyError:
-            print(f"{token} Unexpected character!")
-            break
+def scan_tokens(file_contents: TextIO) -> None:
+    error_found = False
+    for line_number, line in enumerate(file_contents, 1):
+        for token in line:
+            if token in lexems:
+                print(lexems[token])
+            else:
+                print(f"[{line_number}] Error: Unexpected character: {token}")
+                error_found = True
     print(lexems["EOF"])
+    if error_found:
+        sys.exit(65)
 
 
 def main():
@@ -41,14 +45,12 @@ def main():
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
 
-    with open(filename) as file:
-        file_contents = file.read()
 
-    # Uncomment this block to pass the first stage
-    if file_contents:
-        scan_tokens(file_contents)
-    else:
-        print(lexems["EOF"])
+    with open(filename, 'r') as file:
+        if file:
+            scan_tokens(file)
+        else:
+            print(lexems["EOF"])
 
 
 if __name__ == "__main__":
