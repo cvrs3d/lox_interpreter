@@ -29,6 +29,13 @@ class TokenScanner:
         else:
             print(f"IDENTIFIER {lexem} null")
 
+    @staticmethod
+    def print_number(number: str) -> None:
+        if '.' not in number:
+            print(f"NUMBER {number} {number}.0")
+        else:
+            print(f"NUMBER {number} {float(number)}")
+
     def scan_tokens(self) -> None:
         for line_number, line in enumerate(self.file_contents, 1):
             self.process_line(line, line_number)
@@ -107,10 +114,7 @@ class TokenScanner:
                 break
             i += 1
         self.current_index = i
-        if '.' not in self.number:
-            print(f"NUMBER {self.number} {self.number}.0")
-        else:
-            print(f"NUMBER {self.number} {self.number}")
+        self.print_number(self.number)
 
     def handle_identifier(self, line: str, start_index: int, line_number: int) -> None:
         i = start_index
