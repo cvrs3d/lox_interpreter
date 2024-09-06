@@ -79,20 +79,25 @@ class TokenScanner:
         self.number = ""
         self.precision = False
         i = start_index
-        while i < len(line) and line[i].isnumeric():
-            self.number += line[i]
-            if line[i] == "." and not self.precision:
-                self.number += line[i]
+
+        while i < len(line):
+            char = line[i]
+            if char.isnumeric():
+                self.number += char
+            elif char == ".":
+                if self.precision:
+                    self.print_exception(1, char, line_number)
+                    self.error_found = True
+                    break
+                self.number += char
                 self.precision = True
-                i += 1
             else:
-                self.print_exception(1, line[i], line_number)
-                self.error_found = True
+                # If we encounter non-numeric and non-dot character, break
+                break
             i += 1
-        self.current_index = i + 1
+        self.current_index = i
         if '.' not in self.number:
             print(f"NUMBER {self.number} {self.number}.0")
         else:
             print(f"NUMBER {self.number} {self.number}")
-
 
