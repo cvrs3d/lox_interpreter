@@ -10,7 +10,8 @@ def scan_tokens(file_contents: TextIO) -> None:
     for line_number, line in enumerate(file_contents, 1):
         i = 0
         while i < len(line):
-            if line[i] in {' ', '\t'}:
+            char = line[i]
+            if char in {' ', '\t', '\n'}:
                 i += 1
                 continue
             if i + 1 < len(line):
