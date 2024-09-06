@@ -1,4 +1,23 @@
 import sys
+from typing import Dict
+
+lexems: Dict[str, str] = {
+    "(": "LEFT_PAREN ( null",
+    ")": "RIGHT_PAREN ) null",
+    "{": "LEFT_BRACE { null",
+    "}": "RIGHT_BRACE } null",
+    "EOF": "EOF  null",
+}
+
+
+def scan_tokens(file_contents: str) -> None:
+    for token in file_contents:
+        try:
+            print(lexems[token])
+        except KeyError:
+            print(f"{token} Unexpected character!")
+            break
+    print(lexems["EOF"])
 
 
 def main():
@@ -21,14 +40,9 @@ def main():
 
     # Uncomment this block to pass the first stage
     if file_contents:
-        for token in file_contents:
-            if token == '(':
-                print("LEFT_PAREN ( null")
-            elif token == ')':
-                print("RIGHT_PAREN ) null")
-        print("EOF  null")
+        scan_tokens(file_contents)
     else:
-        print("EOF  null")  # Placeholder, remove this line when implementing the scanner
+        print(lexems["EOF"])
 
 
 if __name__ == "__main__":
