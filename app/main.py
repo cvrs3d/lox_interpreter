@@ -6,6 +6,11 @@ lexems: Dict[str, str] = {
     ")": "RIGHT_PAREN ) null",
     "{": "LEFT_BRACE { null",
     "}": "RIGHT_BRACE } null",
+    ",": "COMMA , null",
+    ".": "DOT . null",
+    "*": "STAR * null",
+    ";": "SEMICOLON ; null",
+    "-": "MINUS - null",
     "EOF": "EOF  null",
 }
 
