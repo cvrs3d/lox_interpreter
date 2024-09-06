@@ -34,11 +34,11 @@ class TokenScanner:
             if token in {' ', '\t'}:
                 i += 1
                 continue
-            if token == '"':
+            elif token == '"':
                 self.handle_string_literal(line, i, line_number)
                 i = self.current_index
                 continue
-            if i + 1 < len(line):
+            elif i + 1 < len(line):
                 two_char_token = line[i: i + 2]
                 if two_char_token in special:
                     break
@@ -46,7 +46,7 @@ class TokenScanner:
                     print(lexems[two_char_token])
                     i += 2
                     continue
-            if token in lexems:
+            elif token in lexems:
                 print(lexems[token])
             else:
                 self.print_exception(1, token, line_number)
