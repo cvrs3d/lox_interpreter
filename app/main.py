@@ -24,7 +24,7 @@ def scan_tokens(file_contents: TextIO) -> None:
             if token in lexems:
                 print(lexems[token])
             else:
-                print(f"[line {line_number}] Error: Unexpected character: {token}")
+                print(f"[line {line_number}] Error: Unexpected character: {token}", file=sys.stderr)
                 error_found = True
     print(lexems["EOF"])
     if error_found:
