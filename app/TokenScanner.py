@@ -62,6 +62,7 @@ class TokenScanner:
             if line[i] == '"':
                 self.string_literal += line[i]
                 self.string_ended = True
+                print(f'STRING {self.string_literal} {self.string_literal[1:-1]}')
                 break
             self.string_literal += line[i]
             i += 1
@@ -85,7 +86,8 @@ class TokenScanner:
                     self.string_literal += next_line[i]
                     i += 1
                 if self.string_ended:
+                    print(f'STRING {self.string_literal} {self.string_literal[1:-1]}')
                     break
 
         self.current_index = i + 1
-        print(f'STRING {self.string_literal} {self.string_literal[1:-1]}')
+
