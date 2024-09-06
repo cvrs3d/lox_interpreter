@@ -1,6 +1,7 @@
-class UnknownSymbolError(Exception):
-    def __init__(self, line, char) -> None:
-        self.line = line
-        self.char = char
-        super().__init__(f"[{line}] Error: Unexpected character: {char}")
+import sys
+
+
+def print_exception(code: int, token: str, line_number: int) -> None:
+    if code == 65:
+        print(f"[{line_number}] Error: Unexpected character: {token}", file=sys.stderr)
 

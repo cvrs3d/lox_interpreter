@@ -1,31 +1,26 @@
 import sys
 from typing import Dict, TextIO
-
-lexems: Dict[str, str] = {
-    "(": "LEFT_PAREN ( null",
-    ")": "RIGHT_PAREN ) null",
-    "{": "LEFT_BRACE { null",
-    "}": "RIGHT_BRACE } null",
-    ",": "COMMA , null",
-    ".": "DOT . null",
-    "*": "STAR * null",
-    ";": "SEMICOLON ; null",
-    "-": "MINUS - null",
-    "+": "PLUS + null",
-    "EOF": "EOF  null",
-}
+from lexems import lexems
+from exceptions import print_exception
 
 
 def scan_tokens(file_contents: TextIO) -> None:
+    """Scanning file contents line by line"""
     error_found = False
     for line_number, line in enumerate(file_contents, 1):
-        for token in line:
-            # print(f"{token}", file=sys.stderr)
+        i = 0
+        while i < len(line):
+            if i + 1 < len(line):
+                two_char_token = line[i: i + 2]
+                if two_char_token in lexems:
+                    print(lexems[two_char_token])
+                    i += 2
+                    continue
+            token = line[i]
             if token in lexems:
                 print(lexems[token])
             else:
-                print(f"[line {line_number}] Error: Unexpected character: {token}", file=sys.stderr)
-                error_found = True
+                print_exception(65, token, line_number)
     print(lexems["EOF"])
     if error_found:
         exit(65)
@@ -45,7 +40,6 @@ def main():
     if command != "tokenize":
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
-
 
     with open(filename, 'r') as file:
         if file:
