@@ -30,11 +30,11 @@ class TokenScanner:
     def process_line(self, line: str, line_number: int) -> None:
         i: int = 0
         while i < len(line):
-            char = line[i]
-            if char in {' ', '\t'}:
+            token = line[i]
+            if token in {' ', '\t'}:
                 i += 1
                 continue
-            if char == '"':
+            if token == '"':
                 self.handle_string_literal(line, i, line_number)
                 i = self.current_index
                 continue
@@ -46,7 +46,6 @@ class TokenScanner:
                     print(lexems[two_char_token])
                     i += 2
                     continue
-            token = line[i]
             if token in lexems:
                 print(lexems[token])
             else:
