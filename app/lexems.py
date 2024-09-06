@@ -1,4 +1,5 @@
 from typing import Dict, Set
+from app.Token import TokenType
 
 lexems: Dict[str, str] = {
     "(": "LEFT_PAREN ( null",
@@ -23,20 +24,20 @@ lexems: Dict[str, str] = {
     "and": "AND and null",
     "class": "CLASS class null",
     "else": "ELSE else null",
-    "false": "FALSE false null",
+    "false": ("FALSE false null", TokenType.FALSE),
     "for": "FOR for null",
     "fun": "FUN fun null",
     "if": "IF if null",
-    "nil": "NIL nil null",
+    "nil": ("NIL nil null", TokenType.NIL),
     "or": "OR or null",
     "print": "PRINT print null",
     "return": "RETURN return null",
     "super": "SUPER super null",
     "this": "THIS this null",
-    "true": "TRUE true null",
+    "true": ("TRUE true null", TokenType.TRUE),
     "var": "VAR var null",
     "while": "WHILE while null",
-    "EOF": "EOF  null",
+    "EOF": ("EOF  null", TokenType.EOF),
 }
 
 special: Set[str] = {"//", }

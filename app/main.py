@@ -1,6 +1,6 @@
 import sys
-from typing import TextIO
 from app.TokenScanner import TokenScanner
+from app.TokenParser import Parser, TokenScannerParsing
 from app.lexems import lexems
 
 
@@ -15,16 +15,27 @@ def main():
     command = sys.argv[1]
     filename = sys.argv[2]
 
-    if command != "tokenize":
-        print(f"Unknown command: {command}", file=sys.stderr)
+    if command == "tokenize":
+        with open(filename, 'r') as file:
+            if file:
+                scanner = TokenScanner(file)
+                scanner.scan_tokens()
+            else:
+                print(lexems["EOF"])
+        exit(0)
+    elif command == "parse":
+        with open(filename, 'r') as file:
+            if file:
+                scanner = TokenScannerParsing(file)
+                tokens = scanner.scan_tokens()
+                parser = Parser(tokens)
+                result = parser.parse()
+                print(result)
+            else:
+                print(lexems["EOF"])
+    else:
+        print("Error: Unknown command.", file=sys.stderr)
         exit(1)
-
-    with open(filename, 'r') as file:
-        if file:
-            scanner = TokenScanner(file)
-            scanner.scan_tokens()
-        else:
-            print(lexems["EOF"])
 
 
 if __name__ == "__main__":
