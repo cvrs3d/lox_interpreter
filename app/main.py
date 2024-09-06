@@ -1,7 +1,6 @@
 import sys
-from typing import Dict, TextIO
+from typing import TextIO
 from app.lexems import lexems
-from app.exceptions import print_exception
 
 
 def scan_tokens(file_contents: TextIO) -> None:
@@ -20,7 +19,7 @@ def scan_tokens(file_contents: TextIO) -> None:
             if token in lexems:
                 print(lexems[token])
             else:
-                print_exception(65, token, line_number)
+                print(f"[{line_number}] Error: Unexpected character: {token}", file=sys.stderr)
                 error_found = True
             i += 1
     print(lexems["EOF"])
