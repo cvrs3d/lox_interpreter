@@ -58,15 +58,34 @@ class TokenScanner:
         self.string_literal = '"'
         self.string_ended = False
         i = start_index + 1
-        while i < len(line) and line[i] != '"':
+        while i < len(line):
+            if line[i] == '"':
+                self.string_literal += line[i]
+                self.string_ended = True
+                break
             self.string_literal += line[i]
             i += 1
-        if i < len(line) and line[i] == '"':
-            self.string_literal += line[i]
-            self.string_ended = True
-        else:
-            self.string_literal += '\n'
-            self.string_ended = False
+
+        if not self.string_ended:
+            while True:
+                try:
+                    next_line = next(self.file_contents)
+                except StopIteration:
+                    self.print_exception(2, '', line_number)
+                    self.error_found = True
+                    break
+                line_number += 1
+                self.string_literal += '\n'
+                i = 0
+                while i < len(next_line):
+                    if next_line[i] == '"':
+                        self.string_literal += next_line[i]
+                        self.string_ended = True
+                        break
+                    self.string_literal += next_line[i]
+                    i += 1
+                if self.string_ended:
+                    break
+
         self.current_index = i + 1
         print(f'STRING {self.string_literal} {self.string_literal[1:-1]}')
-
