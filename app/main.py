@@ -27,7 +27,7 @@ def scan_tokens(file_contents: TextIO) -> None:
                 error_found = True
     print(lexems["EOF"])
     if error_found:
-        sys.exit(65)
+        exit(65)
 
 
 def main():
