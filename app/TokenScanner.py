@@ -22,6 +22,13 @@ class TokenScanner:
         elif code == 2:
             print(f"[line {line_number}] Error: Unterminated string.", file=sys.stderr)
 
+    @staticmethod
+    def print_identifier(lexem: str) -> None:
+        if lexem in lexems:
+            print(lexems[lexem])
+        else:
+            print(f"IDENTIFIER {lexem} null")
+
     def scan_tokens(self) -> None:
         for line_number, line in enumerate(self.file_contents, 1):
             self.process_line(line, line_number)
@@ -33,6 +40,10 @@ class TokenScanner:
         i: int = 0
         while i < len(line):
             token = line[i]
+            if token.isalpha() or '_':
+                self.handle_identifier(line, i)
+                i = self.current_index
+                continue
             if token.isnumeric():
                 self.handle_number(line, i, line_number)
                 i = self.current_index
@@ -101,3 +112,13 @@ class TokenScanner:
         else:
             print(f"NUMBER {self.number} {self.number}")
 
+    def handle_identifier(self, line: str, start_index: int) -> None:
+        i = start_index
+        lexem = ""
+
+        while i < len(line) and (line[i].isalpha() or line[i] == '_'):
+            lexem += line[i]
+            i += 1
+
+        self.print_identifier(lexem)
+        self.current_index = i
