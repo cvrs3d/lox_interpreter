@@ -1,9 +1,3 @@
-class Token:
-    def __init__(self, type_, value):
-        self.type = type_
-        self.value = value
-
-
 class TokenType:
     LEFT_PAREN = "LEFT_PAREN"
     RIGHT_PAREN = "RIGHT_PAREN"
@@ -41,3 +35,20 @@ class TokenType:
     VAR = "VAR"
     WHILE = "WHILE"
     EOF = "EOF"
+    IDENTIFIER = "IDENTIFIER"
+    NUMBER = "NUMBER"
+    STRING = "STRING"
+
+
+class Token:
+    def __init__(self, token_type: TokenType, lexeme: str, literal: object, line: int) -> None:
+        self.token_type = token_type
+        self.lexeme = lexeme
+        self.literal = str(literal)
+        self.line = line
+
+    def __str__(self) -> str:
+        return f'{self.token_type} {self.lexeme} {self.literal}'
+
+    def __repr__(self) -> str:
+        return f'{self.token_type} {self.lexeme} {self.literal}'
