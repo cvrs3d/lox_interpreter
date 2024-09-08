@@ -1,3 +1,4 @@
+import sys
 from typing import List, TypeVar, Optional
 
 from app.Expr import Binary, Unary, Literal, Grouping
@@ -21,7 +22,12 @@ class Parser:
     def parse(self) -> Optional[E]:
         """Initial method returns ExpressionType"""
         try:
-            return self.expression()
+            print(f" From method {self.parse.__qualname__}.\n"
+                  f" Message: Parsing tokens: {self._tokens}", file=sys.stderr)
+            expr = self.expression()
+            print(f" From method {self.parse.__qualname__}.\n"
+                  f"Message: About to return -> {expr}", file=sys.stderr)
+            return expr
         except ParserError as error:
             return None
 
@@ -112,6 +118,7 @@ class Parser:
             operator: Token = self.previous()
             right: E = self.unary()
             return Unary(operator, right)
+        return self.primary()
 
     def primary(self) -> E:
         """Then complex literals Booleans and Statements.
@@ -121,7 +128,7 @@ class Parser:
         if self.match(TokenType.TRUE):
             return Literal("true")
         if self.match(TokenType.NIL):
-            return Literal(None)
+            return Literal("nil")
 
         if self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)

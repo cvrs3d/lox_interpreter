@@ -35,18 +35,15 @@ class AstPrinter(Visitor):
         return ''.join(builder)
 
 
-if __name__ == '__main__':
-    expression = Binary(
-        Unary(Token(TokenType.MINUS, "-", "null", 1),
-              Literal(123)),
-        Token(TokenType.STAR, "*", "null", 1),
-        Grouping(
-            Literal(43.65)
-        )
-    )
-    unary = Unary(
-        Token(TokenType.PLUS, '+', 'null', 1),
-        Literal(99),
-    )
-    print(AstPrinter().print(expression))
-    print(AstPrinter().print(unary))
+# if __name__ == '__main__':
+#     expression = Binary(
+#         Unary(Token(TokenType.MINUS, "-", "null", 1),Literal(123)),
+#         Token(TokenType.STAR, "*", "null", 1),
+#         Grouping(Literal(43.65))
+#     )
+#     unary = Unary(
+#         Token(TokenType.PLUS, '+', 'null', 1),
+#         Literal(99),
+#     )
+#     print(AstPrinter().print(expression))
+#     print(AstPrinter().print(unary))

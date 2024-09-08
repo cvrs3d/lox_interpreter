@@ -2,8 +2,10 @@ import io
 import unittest
 from unittest.mock import patch
 
+from app.Expr import Binary, Literal
+from app.Parser import Parser
 from app.Scanner import Scanner
-from app.Token import TokenType
+from app.Token import TokenType, Token
 
 
 class TestScanner(unittest.TestCase):
@@ -81,3 +83,50 @@ class TestScanner(unittest.TestCase):
         output = mock_stderr.getvalue().strip()
         expected = "[line 1] Error: Unexpected character: @"
         self.assertIn(expected, output)
+
+
+class TestParser(unittest.TestCase):
+
+    def test_parse_term(self):
+        tokens = [
+            Token(TokenType.NUMBER, "1", 1, 1),
+            Token(TokenType.PLUS, "+", "null", 1),
+            Token(TokenType.NUMBER, "2", 2, 1),
+            Token(TokenType.EOF, "", "null", 1)
+        ]
+        parser = Parser(tokens)
+        expr = parser.parse()
+        self.assertIsInstance(expr, Binary)
+        self.assertIsInstance(expr.left, Literal)
+        self.assertIsInstance(expr.right, Literal)
+        self.assertEqual(expr.operator.token_type, TokenType.PLUS)
+
+    def test_parse_boolean_true(self):
+        tokens = [
+            Token(TokenType.TRUE, "true", "null", 1),
+            Token(TokenType.EOF," ","null", 1)
+        ]
+        parser = Parser(tokens)
+        expr = parser.parse()
+        self.assertIsInstance(expr, Literal)
+        self.assertEqual(expr.value, "true")
+
+    def test_parse_boolean_false(self):
+        tokens = [
+            Token(TokenType.FALSE, "false", "null", 1),
+            Token(TokenType.EOF," ","null", 1)
+        ]
+        parser = Parser(tokens)
+        expr = parser.parse()
+        self.assertIsInstance(expr, Literal)
+        self.assertEqual(expr.value, "false")
+
+    def test_parse_boolean_nil(self):
+        tokens = [
+            Token(TokenType.NIL, "nil", "null", 1),
+            Token(TokenType.EOF," ","null", 1)
+        ]
+        parser = Parser(tokens)
+        expr = parser.parse()
+        self.assertIsInstance(expr, Literal)
+        self.assertEqual(expr.value, "nil")

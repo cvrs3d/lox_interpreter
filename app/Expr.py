@@ -28,13 +28,16 @@ class Visitor:
 
 
 class Binary(Expr):
-    def __init__(self, left: Expr, operator: Token, right: Expr) -> None:
+    def __init__(self, right: Expr, operator: Token, left: Expr) -> None:
         self.left = left
         self.operator = operator
         self.right = right
 
     def accept(self, visitor: Visitor) -> Any:
         return visitor.visit_binary(self)
+
+    def __repr__(self) -> str:
+        return f" From {self.__class__}Left Operand: {self.left} Operator: {self.operator} Right Operand: {self.right}"
 
 
 class Grouping(Expr):
@@ -51,6 +54,9 @@ class Literal(Expr):
 
     def accept(self, visitor: Visitor) -> Any:
         return visitor.visit_literal(self)
+
+    def __repr__(self):
+        return f" VALUE: {self.value}"
 
 
 class Unary(Expr):
