@@ -47,11 +47,14 @@ class Scanner:
                 self.add_token(TokenType.SLASH, literal=None)
             return
         if c in lexems:
-            if self.match_next('=') and (c + '=' in lexems):
-                self.add_token(lexems[c + '='], literal=None)
+            if c in ['!', '=', '<', '>']:
+                if self.match_next('='):
+                    self.add_token(lexems[c + '='], literal=None)
+                else:
+                    self.add_token(lexems[c], literal=None)
+                return
             else:
                 self.add_token(lexems[c], literal=None)
-            return
         elif c.isalpha() or c == '_':
             self.handle_identifier()
             return

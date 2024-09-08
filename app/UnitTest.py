@@ -76,6 +76,15 @@ class TestScanner(unittest.TestCase):
         self.assertEqual(tokens[0].literal, "null")
         self.assertEqual(tokens[1].token_type, TokenType.EOF)
 
+    def test_custom_1(self):
+        scanner = Scanner("({(<=*=)})//Comment")
+        tokens = scanner.scan_tokens()
+        for t in tokens:
+            print(t)
+        self.assertEqual(11, len(tokens))
+
+
+
     @patch('sys.stderr', new_callable=io.StringIO)
     def test_scan_unexpected_chars(self, mock_stderr):
         scanner = Scanner("@")
