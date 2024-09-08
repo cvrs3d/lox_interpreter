@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch
 
 from app.Expr import Binary, Literal
+from app.Lox import Lox
 from app.Parser import Parser
 from app.Scanner import Scanner
 from app.Token import TokenType, Token
@@ -83,8 +84,6 @@ class TestScanner(unittest.TestCase):
             print(t)
         self.assertEqual(11, len(tokens))
 
-
-
     @patch('sys.stderr', new_callable=io.StringIO)
     def test_scan_unexpected_chars(self, mock_stderr):
         scanner = Scanner("@")
@@ -113,7 +112,7 @@ class TestParser(unittest.TestCase):
     def test_parse_boolean_true(self):
         tokens = [
             Token(TokenType.TRUE, "true", "null", 1),
-            Token(TokenType.EOF," ","null", 1)
+            Token(TokenType.EOF, " ", "null", 1)
         ]
         parser = Parser(tokens)
         expr = parser.parse()
@@ -123,7 +122,7 @@ class TestParser(unittest.TestCase):
     def test_parse_boolean_false(self):
         tokens = [
             Token(TokenType.FALSE, "false", "null", 1),
-            Token(TokenType.EOF," ","null", 1)
+            Token(TokenType.EOF, " ", "null", 1)
         ]
         parser = Parser(tokens)
         expr = parser.parse()
@@ -133,9 +132,29 @@ class TestParser(unittest.TestCase):
     def test_parse_boolean_nil(self):
         tokens = [
             Token(TokenType.NIL, "nil", "null", 1),
-            Token(TokenType.EOF," ","null", 1)
+            Token(TokenType.EOF, " ", "null", 1)
         ]
         parser = Parser(tokens)
         expr = parser.parse()
         self.assertIsInstance(expr, Literal)
         self.assertEqual(expr.value, "nil")
+
+
+class TestSystemExit(unittest.TestCase):
+
+    @patch('sys.exit')
+    def test_exit_code_65_on_error(self, mock_exit):
+        Lox.had_error = True
+
+        with self.assertRaises(SystemExit) as cm:
+            Lox.run("(73 +)", "parse")
+
+        self.assertEqual(cm.exception.code, 65)
+
+    @patch('sys.exit')
+    def test_exit_code_65_when_attribute_error(self, mock_exit):
+        with patch.object(Parser, 'parse', side_effect=AttributeError):
+            with self.assertRaises(SystemExit) as cm:
+                Lox.run("source_code_here", "parse")
+
+            self.assertEqual(cm.exception.code, 65)

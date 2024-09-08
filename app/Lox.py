@@ -49,10 +49,13 @@ class Lox:
             scanner: Scanner = Scanner(source)
             tokens: List[Token] = scanner.scan_tokens()
             parser: Parser = Parser(tokens)
-            expr: E = parser.parse()
-            print(AstPrinter().print(expr))
+            try:
+                expr: E = parser.parse()
+                print(AstPrinter().print(expr))
+            except AttributeError:
+                Lox.had_error = True
         if Lox.had_error:
-            sys.exit(65)
+            exit(65)
 
     @staticmethod
     def error(token: Token, message: str) -> None:
@@ -64,8 +67,8 @@ class Lox:
     @staticmethod
     def report(line: int, message: str, char: Optional[str] = None, where: str = '') -> None:
         Lox.had_error = True
-        print(f"[line {line}] Error{where}: {message}{char if char is not None else ''}", file=sys.stderr)
+        print(f"[line {line}] Error{message}: {char if char is not None else ''}", file=sys.stderr)
 
 
-# if __name__ == "__main__":
-#     Lox.run("!true", "parse")
+if __name__ == "__main__":
+    Lox.run('(72 + )', "parse")
