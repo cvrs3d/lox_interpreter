@@ -66,6 +66,6 @@ class Lox:
         Lox.had_error = True
         print(f"[line {line}] Error{where}: {message}{char if char is not None else ''}", file=sys.stderr)
 
-#
+
 # if __name__ == "__main__":
-#     Lox.run("2 @+ 3@", "tokenize")
+#     Lox.run("!true", "parse")
