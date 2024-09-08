@@ -60,15 +60,15 @@ class Lox:
     @staticmethod
     def error(token: Token, message: str) -> None:
         if token.token_type == TokenType.EOF:
-            Lox.report(token.line, " at end", message)
+            Lox.report(token.line, message=message, where=" at end")
         else:
-            Lox.report(token.line, " at '" + token.lexeme + "'", message)
+            Lox.report(token.line, message=message, where=" at '" + token.lexeme + "'")
 
     @staticmethod
     def report(line: int, message: str, char: Optional[str] = None, where: str = '') -> None:
         Lox.had_error = True
-        print(f"[line {line}] Error{message}: {char if char is not None else ''}", file=sys.stderr)
+        print(f"[line {line}] Error{where}: {message}{char if char is not None else ''}", file=sys.stderr)
 
 
-if __name__ == "__main__":
-    Lox.run('(72 + )', "parse")
+# if __name__ == "__main__":
+#     Lox.run('(73 +)', "parse")
