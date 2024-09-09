@@ -91,5 +91,5 @@ class Lox:
         Lox.had_runtime_error = True
 
 
-# if __name__ == "__main__":
-#     Lox.run('(73 +)', "parse")
+if __name__ == "__main__":
+    Lox.run("42", "evaluate")

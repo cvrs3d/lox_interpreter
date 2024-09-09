@@ -1,4 +1,3 @@
-
 from typing import Any
 
 from app.Errors import RuntimeException
@@ -18,14 +17,16 @@ class Interpreter(Visitor):
 
     @staticmethod
     def stringify(value: Any) -> str:
+        print(f"From {Interpreter.stringify.__qualname__} being called with {value} of type {type(value)}")
         """Java's stringify"""
         if value is None:
             return "nil"
-        if isinstance(value, float):
-            text = str(value)
-            if text.endswith(".0"):
-                text = text[:-2]  # Trim zeroes for decimal
+
+        text = str(value)
+        if text.endswith(".0"):
+            text = text[:-2]  # Trim zeroes for decimal
             return text
+        print(f"From {Interpreter.stringify.__qualname__} returning {value} of type {type(value)}")
         return str(value)
 
     def visit_literal(self, expr: Literal) -> Any:
@@ -121,6 +122,3 @@ class Interpreter(Visitor):
         for operand in operands:
             if not isinstance(operand, float):
                 raise RuntimeException(operator, f"Operand+{'s' if len(*operands) > 1 else ''} must be a number.")
-
-
-
