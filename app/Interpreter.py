@@ -51,7 +51,7 @@ class Interpreter(Visitor):
             print(f"from{self.visit_unary.__qualname__} entering is_truthy with {right}", file=sys.stderr)
             return not self.is_truthy(right)
         if expr.operator.token_type == TokenType.MINUS:
-            self.check_number_operands(expr.operator, right)
+            self.check_number_operands(expr.operator, right=right)
             return -float(right)
 
         return None
@@ -124,7 +124,14 @@ class Interpreter(Visitor):
         return left == right
 
     @staticmethod
-    def check_number_operands(operator: Token, *operands) -> None:
-        for operand in operands:
-            if not isinstance(operand, float):
-                raise RuntimeException(operator, f"Operand+{'s' if len(*operands) > 1 else ''} must be a number.")
+    def check_number_operands(operator: Token, left: Any = None, right: Any = None) -> None:
+        if left is None:
+            if isinstance(right, float):
+                return
+            else:
+                raise RuntimeException(operator, f"Operand must be a number.")
+        if isinstance(left, float) and isinstance(right, float):
+            return
+        else:
+            raise RuntimeException(operator, f"Operands must be a numbers.")
+

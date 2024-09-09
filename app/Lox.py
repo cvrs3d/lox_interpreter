@@ -87,9 +87,9 @@ class Lox:
 
     @staticmethod
     def runtime_error(error: RuntimeException) -> None:
-        print(f"{error}\n[line {error.token.line}]")
+        print(f"\n{error}\n[line {error.token.line}]")
         Lox.had_runtime_error = True
 
 
-if __name__ == "__main__":
-    Lox.run("false", "parse")
+# if __name__ == "__main__":
+#     Lox.run('"hello"-"hello"', "evaluate")
