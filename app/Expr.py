@@ -28,7 +28,7 @@ class Visitor:
 
 
 class Binary(Expr):
-    def __init__(self, right: Expr, operator: Token, left: Expr) -> None:
+    def __init__(self, left: Expr, operator: Token, right: Expr) -> None:
         self.left = left
         self.operator = operator
         self.right = right

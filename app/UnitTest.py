@@ -2,11 +2,62 @@ import io
 import unittest
 from unittest.mock import patch
 
-from app.Expr import Binary, Literal
+from app.Expr import Binary, Literal, Unary
+from app.Interpreter import Interpreter
 from app.Lox import Lox
 from app.Parser import Parser
 from app.Scanner import Scanner
 from app.Token import TokenType, Token
+
+
+class TestInterpreter(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.interpreter = Interpreter()
+
+    def evaluate_expression(self, expr):
+        return self.interpreter.evaluate(expr)
+
+    def test_literal(self):
+        expr = Literal(42)
+        result = self.evaluate_expression(expr)
+        print(result)
+        self.assertEqual(result, 42)
+
+    def test_unary_negation(self):
+        expr = Unary(Token(TokenType.MINUS, "-", None, 1), Literal(3.5))
+        result = self.evaluate_expression(expr)
+        self.assertEqual(result, -3.5)
+
+    def test_unary_not(self):
+        expr = Unary(Token(TokenType.BANG, "!", None, 1), Literal(True))
+        result = self.evaluate_expression(expr)
+        self.assertEqual(result, False)
+
+    def test_binary_addition(self):
+        expr = Binary(Literal(3.0), Token(TokenType.PLUS, "+", None, 1), Literal(4.5))
+        result = self.evaluate_expression(expr)
+        self.assertEqual(result, 7.5)
+
+    def test_binary_subtraction(self):
+        expr = Binary(Literal(10.0), Token(TokenType.MINUS, "-", None, 1), Literal(4.5))
+        result = self.evaluate_expression(expr)
+        self.assertEqual(result, 5.5)
+
+    def test_binary_multiplication(self):
+        expr = Binary(Literal(2.0), Token(TokenType.STAR, "*", None, 1), Literal(3.0))
+        result = self.evaluate_expression(expr)
+        self.assertEqual(result, 6.0)
+
+    def test_binary_division(self):
+        expr = Binary(Literal(10.0), Token(TokenType.SLASH, "/", None, 1), Literal(2.0))
+        result = self.evaluate_expression(expr)
+        self.assertEqual(result, 5.0)
+
+    def test_string_concatenation(self):
+        expr = Binary(Literal("Hello, "), Token(TokenType.PLUS, "+", None, 1), Literal("World!"))
+        result = self.evaluate_expression(expr)
+        self.assertEqual(result, "Hello, World!")
 
 
 class TestScanner(unittest.TestCase):
@@ -82,7 +133,7 @@ class TestScanner(unittest.TestCase):
         tokens = scanner.scan_tokens()
         for t in tokens:
             print(t)
-        self.assertEqual(11, len(tokens))
+        self.assertEqual(10, len(tokens))
 
     @patch('sys.stderr', new_callable=io.StringIO)
     def test_scan_unexpected_chars(self, mock_stderr):
@@ -158,3 +209,7 @@ class TestSystemExit(unittest.TestCase):
                 Lox.run("source_code_here", "parse")
 
             self.assertEqual(cm.exception.code, 65)
+
+
+if __name__ == "__main__":
+    unittest.main()

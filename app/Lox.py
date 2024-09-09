@@ -1,11 +1,15 @@
 import sys
 from typing import List, Optional
 
+from app.Errors import RuntimeException
+from app.Interpreter import Interpreter
 from app.Token import Token, TokenType
 
 
 class Lox:
     had_error = False
+    had_runtime_error = False
+    interpreter = Interpreter()
 
     @staticmethod
     def main(args: List[str]):
@@ -40,6 +44,7 @@ class Lox:
         from app.Parser import Parser, E
         from app.ASTPrinter import AstPrinter  # We do not want circular import
         Lox.had_error = False
+        Lox.had_runtime_error = False
         if command == 'tokenize':
             scanner: Scanner = Scanner(source)
             tokens: List[Token] = scanner.scan_tokens()
@@ -54,8 +59,19 @@ class Lox:
                 print(AstPrinter().print(expr))
             except AttributeError:
                 Lox.had_error = True
+        elif command == 'evaluate':
+            scanner: Scanner = Scanner(source)
+            tokens: List[Token] = scanner.scan_tokens()
+            parser: Parser = Parser(tokens)
+            try:
+                expr: E = parser.parse()
+                Lox.interpreter.interpret(expr)
+            except AttributeError:
+                Lox.had_error = True
         if Lox.had_error:
             exit(65)
+        if Lox.had_runtime_error:
+            exit(70)
 
     @staticmethod
     def error(token: Token, message: str) -> None:
@@ -68,6 +84,11 @@ class Lox:
     def report(line: int, message: str, char: Optional[str] = None, where: str = '') -> None:
         Lox.had_error = True
         print(f"[line {line}] Error{where}: {message}{char if char is not None else ''}", file=sys.stderr)
+
+    @staticmethod
+    def runtime_error(error: RuntimeException) -> None:
+        print(f"{error}\n[line {error.token.line}]")
+        Lox.had_runtime_error = True
 
 
 # if __name__ == "__main__":
