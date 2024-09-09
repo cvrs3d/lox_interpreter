@@ -18,7 +18,8 @@ class Interpreter(Visitor):
 
     @staticmethod
     def stringify(value: Any) -> str:
-        print(f"From {Interpreter.stringify.__qualname__} being called with {value} of type {type(value)}", file=sys.stderr)
+        print(f"From {Interpreter.stringify.__qualname__} being called with {value} of type {type(value)}",
+              file=sys.stderr)
         """Java's stringify"""
         if value is None:
             return "nil"
@@ -82,13 +83,21 @@ class Interpreter(Visitor):
             return float(left) / float(right)
 
         if expr.operator.token_type == TokenType.PLUS:
+            print(f"From {Interpreter.visit_binary.__qualname__} entering + if clause with left{left} right{right}",
+                  file=sys.stderr)
             if isinstance(left, str) and isinstance(right, str):
+                print(f"From {Interpreter.visit_binary.__qualname__} entered concat left is str{isinstance(left, str)}"
+                      f"right is str {isinstance(right, str)}", file=sys.stderr)
                 return str(left) + str(right)
             if isinstance(left, float) and isinstance(right, float):
+                print(f"From {Interpreter.visit_binary.__qualname__} entered + left is str{isinstance(left, str)}"
+                      f"right is str {isinstance(right, str)}", file=sys.stderr)
                 self.check_number_operands(expr.operator, left, right)
                 return float(left) + float(right)
             else:
-                RuntimeException(expr.operator, "Operands must be two numbers or two strings.")
+                print(f"From {Interpreter.visit_binary.__qualname__} entered else left is str{isinstance(left, str)}"
+                      f"right is str {isinstance(right, str)} operator = {expr.operator}", file=sys.stderr)
+                raise RuntimeException(expr.operator, "Operands must be two numbers or two strings.")
 
         if expr.operator.token_type == TokenType.GREATER:
             self.check_number_operands(expr.operator, left, right)
@@ -134,4 +143,3 @@ class Interpreter(Visitor):
             return
         else:
             raise RuntimeException(operator, f"Operands must be a numbers.")
-
