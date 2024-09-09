@@ -48,7 +48,7 @@ class Interpreter(Visitor):
         right: Any = self.evaluate(expr.right)
 
         if expr.operator.token_type == TokenType.BANG:
-            print(f"from{self.visit_unary.__qualname__} entering is_truthy with {right}")
+            print(f"from{self.visit_unary.__qualname__} entering is_truthy with {right}", file=sys.stderr)
             return not self.is_truthy(right)
         if expr.operator.token_type == TokenType.MINUS:
             self.check_number_operands(expr.operator, right)
