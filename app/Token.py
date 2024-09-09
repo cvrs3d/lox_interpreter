@@ -44,7 +44,7 @@ class Token:
     def __init__(self, token_type: TokenType, lexeme: str, literal: object, line: int) -> None:
         self.token_type = token_type
         self.lexeme = lexeme
-        self.literal = str(literal)
+        self.literal = literal
         self.line = line
 
     def __str__(self) -> str:
