@@ -22,11 +22,7 @@ class Parser:
     def parse(self) -> Optional[E]:
         """Initial method returns ExpressionType"""
         try:
-            print(f" From method {self.parse.__qualname__}.\n"
-                  f" Message: Parsing tokens: {self._tokens}", file=sys.stderr)
             expr = self.expression()
-            print(f" From method {self.parse.__qualname__}.\n"
-                  f"Message: About to return -> {expr}", file=sys.stderr)
             return expr
         except ParserError as error:
             return None
