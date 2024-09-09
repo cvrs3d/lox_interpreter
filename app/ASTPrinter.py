@@ -10,7 +10,7 @@ class AstPrinter(Visitor):
 
     def visit_binary(self, expr: Binary) -> str:
         return self.parenthesize(expr.operator.lexeme,
-                                 expr.right, expr.left)
+                                 expr.left, expr.right)
 
     def visit_grouping(self, expr: Grouping) -> str:
         return self.parenthesize("group", expr.expression)

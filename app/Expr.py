@@ -37,7 +37,7 @@ class Binary(Expr):
         return visitor.visit_binary(self)
 
     def __repr__(self) -> str:
-        return f" From {self.__class__}Left Operand: {self.left} Operator: {self.operator} Right Operand: {self.right}"
+        return f"From {self.__class__}Left Operand: {self.left} Operator: {self.operator} Right Operand: {self.right}"
 
 
 class Grouping(Expr):
