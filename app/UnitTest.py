@@ -31,8 +31,8 @@ class TestInterpreter(unittest.TestCase):
 
     def test_unary_not(self):
         expr = Unary(Token(TokenType.BANG, "!", None, 1), Literal(True))
-        result = self.evaluate_expression(expr)
-        self.assertEqual(result, False)
+        result = self.interpreter.stringify(self.evaluate_expression(expr))
+        self.assertEqual(result, "false")
 
     def test_binary_addition(self):
         expr = Binary(Literal(3.0), Token(TokenType.PLUS, "+", None, 1), Literal(4.5))

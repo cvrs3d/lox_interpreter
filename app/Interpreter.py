@@ -22,6 +22,10 @@ class Interpreter(Visitor):
         """Java's stringify"""
         if value is None:
             return "nil"
+        if value is False:
+            return "false"
+        if value is True:
+            return "true"
 
         text = str(value)
         if text.endswith(".0"):
