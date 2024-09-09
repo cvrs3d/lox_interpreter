@@ -124,11 +124,11 @@ class Parser:
         """Then complex literals Booleans and Statements.
             This method is likely to cause a panic when doesn't find a closing paren."""
         if self.match(TokenType.FALSE):
-            return Literal("false")
+            return Literal(False)
         if self.match(TokenType.TRUE):
-            return Literal("true")
+            return Literal(True)
         if self.match(TokenType.NIL):
-            return Literal("nil")
+            return Literal(None)
 
         if self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)

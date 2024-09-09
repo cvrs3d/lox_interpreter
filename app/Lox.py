@@ -92,4 +92,4 @@ class Lox:
 
 
 if __name__ == "__main__":
-    Lox.run("42", "evaluate")
+    Lox.run("false", "parse")
