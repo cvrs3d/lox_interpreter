@@ -1,11 +1,10 @@
-from typing import List, Optional, TypeVar
+from typing import List, TypeVar, Any, Optional
 
 from app.Expr import Binary, Unary, Literal, Grouping
 from app.Lox import Lox
 from app.Parser import ParserError
 from app.Token import Token, TokenType
 from app.lexems import statements
-
 E = TypeVar('E')
 
 

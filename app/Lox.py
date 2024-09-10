@@ -2,15 +2,16 @@ import sys
 from typing import List, Optional
 
 from app.Errors import RuntimeException
+from app.Evaluator import Evaluator
 from app.Interpreter import Interpreter
 from app.Token import Token, TokenType
-
 
 
 class Lox:
     had_error = False
     had_runtime_error = False
     interpreter = Interpreter()
+    evaluator = Evaluator()
 
     @staticmethod
     def main(args: List[str]):
@@ -56,18 +57,18 @@ class Lox:
             scanner: Scanner = Scanner(source)
             tokens: List[Token] = scanner.scan_tokens()
             parser: ExprParser = ExprParser(tokens)
+            expr: E = parser.parse()
             try:
-                expr: E = parser.parse()
                 print(AstPrinter().print(expr))
             except AttributeError:
                 Lox.had_error = True
         elif command == 'evaluate':
             scanner: Scanner = Scanner(source)
             tokens: List[Token] = scanner.scan_tokens()
-            parser: Parser = Parser(tokens)
+            parser: ExprParser = ExprParser(tokens)
             try:
                 expr: E = parser.parse()
-                Lox.interpreter.interpret(expr)
+                Lox.evaluator.interpret(expr)
             except AttributeError:
                 Lox.had_error = True
         elif command == 'run':
@@ -75,14 +76,14 @@ class Lox:
             tokens: List[Token] = scanner.scan_tokens()
             parser: Parser = Parser(tokens)
             try:
-                statements = parser.parse()
-                Lox.interpreter.interpret(statements)
+                expr = parser.parse()
+                Lox.interpreter.interpret(expr)
             except AttributeError:
                 Lox.had_error = True
-        if Lox.had_error:
-            exit(65)
         if Lox.had_runtime_error:
             exit(70)
+        if Lox.had_error:
+            exit(65)
 
     @staticmethod
     def error(token: Token, message: str) -> None:
@@ -99,8 +100,9 @@ class Lox:
     @staticmethod
     def runtime_error(error: RuntimeException) -> None:
         print(f"{error}\n[line {error.token.line}]", file=sys.stderr)
+        exit(70)
         Lox.had_runtime_error = True
 
 
 if __name__ == "__main__":
-    Lox.main(['./your_program.sh',  'parse',  'test.lox'])
+    Lox.main(['./your_program.sh', 'run', 'test.lox'])
