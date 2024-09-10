@@ -6,6 +6,7 @@ from app.Interpreter import Interpreter
 from app.Token import Token, TokenType
 
 
+
 class Lox:
     had_error = False
     had_runtime_error = False
@@ -40,8 +41,9 @@ class Lox:
 
     @staticmethod
     def run(source: str, command: str) -> None:
+        from app.ExprParser import ExprParser
         from app.Scanner import Scanner
-        from app.Parser import Parser, E
+        from app.Parser import E, Parser
         from app.ASTPrinter import AstPrinter  # We do not want circular import
         Lox.had_error = False
         Lox.had_runtime_error = False
@@ -53,7 +55,7 @@ class Lox:
         elif command == 'parse':
             scanner: Scanner = Scanner(source)
             tokens: List[Token] = scanner.scan_tokens()
-            parser: Parser = Parser(tokens)
+            parser: ExprParser = ExprParser(tokens)
             try:
                 expr: E = parser.parse()
                 print(AstPrinter().print(expr))
@@ -100,5 +102,5 @@ class Lox:
         Lox.had_runtime_error = True
 
 
-# if __name__ == "__main__":
-#     Lox.main(['./your_program.sh',  'run',  'test.lox'])
+if __name__ == "__main__":
+    Lox.main(['./your_program.sh',  'parse',  'test.lox'])
