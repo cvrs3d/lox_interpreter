@@ -1,10 +1,9 @@
 from typing import List
 
-from app.Expr import Visitor, Binary, Unary, Grouping, Literal, Variable
-from app.Token import Token, TokenType
+from app.Expr import ExprVisitor, Binary, Unary, Grouping, Literal, Variable
 
 
-class AstPrinter(Visitor):
+class AstPrinter(ExprVisitor):
     def print(self, expr):
         return expr.accept(self)
 

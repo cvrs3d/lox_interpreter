@@ -6,11 +6,11 @@ from app.Token import Token
 
 
 class Expr:
-    def accept(self, visitor: Visitor) -> Any:
+    def accept(self, visitor: ExprVisitor) -> Any:
         raise NotImplementedError()
 
 
-class Visitor:
+class ExprVisitor:
     def visit_binary(self, expr: Binary) -> Any:
         raise NotImplementedError()
 
@@ -23,7 +23,10 @@ class Visitor:
     def visit_unary(self, expr: Unary) -> Any:
         raise NotImplementedError()
 
-    def visit_variable(self, expr: Variable) -> Any:
+    def visit_variable_expr(self, expr: Variable) -> Any:
+        raise NotImplementedError()
+
+    def visit_assign(self, expr: Assign) -> Any:
         raise NotImplementedError()
 
 
@@ -33,7 +36,7 @@ class Binary(Expr):
         self.operator = operator
         self.right = right
 
-    def accept(self, visitor: Visitor) -> Any:
+    def accept(self, visitor: ExprVisitor) -> Any:
         return visitor.visit_binary(self)
 
     def __repr__(self) -> str:
@@ -44,7 +47,7 @@ class Grouping(Expr):
     def __init__(self, expression: Expr) -> None:
         self.expression = expression
 
-    def accept(self, visitor: Visitor) -> Any:
+    def accept(self, visitor: ExprVisitor) -> Any:
         return visitor.visit_grouping(self)
 
 
@@ -52,7 +55,7 @@ class Literal(Expr):
     def __init__(self, value: Any) -> None:
         self.value = value
 
-    def accept(self, visitor: Visitor) -> Any:
+    def accept(self, visitor: ExprVisitor) -> Any:
         return visitor.visit_literal(self)
 
     def __repr__(self):
@@ -64,13 +67,22 @@ class Unary(Expr):
         self.operator = operator
         self.right = right
 
-    def accept(self, visitor: Visitor) -> Any:
+    def accept(self, visitor: ExprVisitor) -> Any:
         return visitor.visit_unary(self)
 
 
 class Variable(Expr):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: Token) -> None:
         self.name = name
 
-    def accept(self, visitor: Visitor) -> Any:
-        return visitor.visit_variable(self)
+    def accept(self, visitor: ExprVisitor) -> Any:
+        return visitor.visit_variable_expr(self)
+
+
+class Assign(Expr):
+    def __init__(self, name: Token, value: Expr):
+        self.name = name
+        self.value = value
+
+    def accept(self, visitor: ExprVisitor) -> Any:
+        return visitor.visit_assign(self)

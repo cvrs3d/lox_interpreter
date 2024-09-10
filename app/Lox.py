@@ -68,6 +68,15 @@ class Lox:
                 Lox.interpreter.interpret(expr)
             except AttributeError:
                 Lox.had_error = True
+        elif command == 'run':
+            scanner: Scanner = Scanner(source)
+            tokens: List[Token] = scanner.scan_tokens()
+            parser: Parser = Parser(tokens)
+            try:
+                statements = parser.parse()
+                Lox.interpreter.interpret(statements)
+            except AttributeError:
+                Lox.had_error = True
         if Lox.had_error:
             exit(65)
         if Lox.had_runtime_error:
@@ -91,5 +100,5 @@ class Lox:
         Lox.had_runtime_error = True
 
 
-if __name__ == "__main__":
-    Lox.run('"hello" + true', "evaluate")
+# if __name__ == "__main__":
+#     Lox.main(['./your_program.sh',  'run',  'test.lox'])

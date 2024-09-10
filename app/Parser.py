@@ -1,8 +1,8 @@
-import sys
-from typing import List, TypeVar, Optional
+from typing import List, TypeVar, Any
 
-from app.Expr import Binary, Unary, Literal, Grouping
+from app.Expr import Binary, Unary, Literal, Grouping, Variable, Assign
 from app.Lox import Lox
+from app.Stmt import Stmt, Print, Expression, Var, Block
 from app.Token import Token, TokenType
 from app.lexems import statements
 
@@ -19,17 +19,16 @@ class Parser:
         self._tokens = tokens
         self._current = 0
 
-    def parse(self) -> Optional[E]:
-        """Initial method returns ExpressionType"""
-        try:
-            expr = self.expression()
-            return expr
-        except ParserError as error:
-            return None
+    def parse(self) -> List['Stmt']:
+        """Parse method returns a list of statements."""
+        stmts: List[Stmt] = []
+        while not self.is_at_end():
+            stmts.append(self.declaration())
+        return stmts
 
     def expression(self) -> E:
         """Returns expression(Binary, Unary etc)"""
-        return self.equality()
+        return self.assignment()
 
     def equality(self) -> E:
         """First expressions in syntax tree are != and == we check for all of them and go deeper
@@ -117,8 +116,7 @@ class Parser:
         return self.primary()
 
     def primary(self) -> E:
-        """Then complex literals Booleans and Statements.
-            This method is likely to cause a panic when doesn't find a closing paren."""
+        """Then complex literals Booleans and Statements."""
         if self.match(TokenType.FALSE):
             return Literal(False)
         if self.match(TokenType.TRUE):
@@ -128,6 +126,9 @@ class Parser:
 
         if self.match(TokenType.NUMBER, TokenType.STRING):
             return Literal(self.previous().literal)
+
+        if self.match(TokenType.IDENTIFIER):
+            return Variable(self.previous())
 
         if self.match(TokenType.LEFT_PAREN):
             expr: E = self.expression()
@@ -151,7 +152,7 @@ class Parser:
         return ParserError()
 
     def synchronize(self) -> None:
-        """Panic unwind mechanism. Yet is not in use"""
+        """Panic unwind mechanism."""
         self.advance()
 
         while not self.is_at_end():
@@ -161,3 +162,60 @@ class Parser:
                 return
 
             self.advance()
+
+    def statement(self) -> Stmt:
+        if self.match(TokenType.PRINT):
+            return self.print_statement()
+        if self.match(TokenType.LEFT_BRACE):
+            return Block(self.block())
+        return self.expression_statement()
+
+    def block(self) -> List[Stmt]:
+        stmts: List[Stmt] = []
+        while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
+            stmts.append(self.declaration())
+        self.consume(TokenType.RIGHT_BRACE, "Expect '}' after block.")
+        return stmts
+
+    def print_statement(self):
+        value: Any = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        return Print(value)
+
+    def expression_statement(self):
+        expr: Any = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after expression.")
+        return Expression(expr)
+
+    def assignment(self) -> Any:
+        expr = self.equality()
+        if self.match(TokenType.EQUAL):
+            equals: Token = self.previous()
+            value: Any = self.assignment()
+
+            if isinstance(expr, Variable):
+                name: Token = expr.name
+                return Assign(name, value)
+
+            self.error(equals, "Invalid assignment target.")
+
+        return expr
+
+    def declaration(self) -> Stmt:
+        try:
+            if self.match(TokenType.VAR):
+                return self.var_declaration()
+            return self.statement()
+        except ParserError:
+            self.synchronize()
+            return None
+
+    def var_declaration(self) -> Any:
+        name: Token = self.consume(TokenType.IDENTIFIER, "Expect variable name.")
+
+        initializer: Any = None
+        if self.match(TokenType.EQUAL):
+            initializer = self.expression()
+
+        self.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
+        return Var(name, initializer)
